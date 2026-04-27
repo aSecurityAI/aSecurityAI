@@ -1136,10 +1136,36 @@ body.ar .lang-toggle { right: auto; left: 20px; }
   </div>
 </section>
 
+<!-- EDUCATION -->
+<section id="education" style="background: var(--bg2);">
+  <div class="section-header fade-in">
+    <span class="section-num">04</span>
+    <h2 class="section-title" id="s-edu-title">Education</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="fade-in" style="max-width: 800px;">
+    <div style="border: 1px solid rgba(0,255,136,0.35);background: var(--bg3);padding: 40px 48px;position: relative;overflow: hidden;">
+      <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);"></div>
+      <div style="display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:10px;padding:5px 14px;border:1px solid var(--accent);color:var(--accent);letter-spacing:2px;margin-bottom:24px;" id="edu-badge">DIPLOMA — 2023 / 2025</div>
+      <div style="display:flex;align-items:flex-start;gap:32px;flex-wrap:wrap;">
+        <div style="font-size:56px;line-height:1;">🎓</div>
+        <div style="flex:1;min-width:220px;">
+          <div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:0.3px;" id="edu-degree">Diploma in Cybersecurity, Network Security &amp; Information Security</div>
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--accent2);margin-bottom:16px;" id="edu-uni">Jadara University — Irbid, Jordan</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <span style="font-family:var(--font-mono);font-size:11px;padding:4px 12px;border:1px solid var(--border);color:var(--text-dim);">2023 – 2025</span>
+            <span style="font-family:var(--font-mono);font-size:11px;padding:4px 12px;border:1px solid var(--border);color:var(--text-dim);" id="edu-loc">Irbid, Jordan 🇯🇴</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CERTIFICATIONS -->
 <section id="certs">
   <div class="section-header fade-in">
-    <span class="section-num">04</span>
+    <span class="section-num">05</span>
     <h2 class="section-title" id="s4-title">Certifications</h2>
     <div class="section-line"></div>
   </div>
@@ -1241,6 +1267,11 @@ const content = {
     's2-title': 'Projects',
     's3-title': 'Skills',
     's4-title': 'Certifications',
+    'edu-badge': 'DIPLOMA — 2023 / 2025',
+    'edu-degree': 'Diploma in Cybersecurity, Network Security & Information Security',
+    'edu-uni': 'Jadara University — Irbid, Jordan',
+    'edu-loc': 'Irbid, Jordan 🇯🇴',
+    's-edu-title': 'Education',
     'svc1-name': 'Cybersecurity',
     'svc1-desc': 'Red Team & Blue Team operations, penetration testing, vulnerability assessment, SOC/SIEM deployment, and incident response.',
     'svc2-name': 'AI Development',
@@ -1288,6 +1319,11 @@ const content = {
     's2-title': 'المشاريع',
     's3-title': 'المهارات',
     's4-title': 'الشهادات',
+    'edu-badge': 'دبلوم — 2023 / 2025',
+    'edu-degree': 'دبلوم في الأمن السيبراني وأمن الشبكات وأمن المعلومات',
+    'edu-uni': 'جامعة جدارا — إربد، الأردن',
+    'edu-loc': 'إربد، الأردن 🇯🇴',
+    's-edu-title': 'التعليم',
     'svc1-name': 'الأمن السيبراني',
     'svc1-desc': 'عمليات الفريق الأحمر والأزرق، اختبار الاختراق، تقييم الثغرات، بناء أنظمة SOC/SIEM، والاستجابة للحوادث.',
     'svc2-name': 'تطوير الذكاء الاصطناعي',
@@ -1331,7 +1367,8 @@ function setLang(lang) {
 
   // Simple text fields
   const textFields = ['hero-tag','ht1','ht2','ht3','hero-desc','sl1','sl2','sl3','cta1','cta2',
-    's1-title','s2-title','s3-title','s4-title',
+    's1-title','s2-title','s3-title','s4-title','s-edu-title',
+    'edu-badge','edu-degree','edu-uni','edu-loc',
     'svc1-name','svc1-desc','svc2-name','svc2-desc','svc3-name','svc3-desc',
     'svc4-name','svc4-desc','svc5-name','svc5-desc','svc6-name','svc6-desc',
     'hp-ver','hp-desc','sh1-desc','sh2-desc','ag-desc',
