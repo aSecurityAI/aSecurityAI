@@ -71,17 +71,14 @@ body::after {
 
 /* LANGUAGE TOGGLE */
 .lang-toggle {
-  position: fixed;
-  top: 16px;
-  right: 80px;
-  z-index: 1000;
   display: flex;
   gap: 4px;
-  background: rgba(6,15,23,0.9);
+  background: rgba(6,15,23,0.5);
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 4px;
-  backdrop-filter: blur(10px);
+  margin-left: 24px;
+  flex-shrink: 0;
 }
 
 .lang-btn {
@@ -838,7 +835,7 @@ body.ar .project-features li { flex-direction: row-reverse; }
 body.ar .skill-item { flex-direction: row-reverse; }
 body.ar .cert-item { flex-direction: row-reverse; text-align: right; }
 body.ar .contact-sub { font-family: var(--font-ar); }
-body.ar .lang-toggle { right: auto; left: 80px; }
+body.ar .lang-toggle { margin-left: 0; margin-right: 24px; }
 
 /* TYPED CURSOR */
 .typed::after {
@@ -880,12 +877,6 @@ body.ar .lang-toggle { right: auto; left: 80px; }
 </head>
 <body>
 
-<!-- LANG TOGGLE -->
-<div class="lang-toggle">
-  <button class="lang-btn active" onclick="setLang('en')" id="btn-en">EN</button>
-  <button class="lang-btn" onclick="setLang('ar')" id="btn-ar">ع</button>
-</div>
-
 <!-- NAV -->
 <nav>
   <div class="nav-logo"><span style="color:var(--accent);font-size:16px;margin-right:6px;">🛡</span>Aamer<span>Group</span></div>
@@ -895,6 +886,10 @@ body.ar .lang-toggle { right: auto; left: 80px; }
     <li><a href="#skills" data-en="Skills" data-ar="المهارات">Skills</a></li>
     <li><a href="#contact" data-en="Contact" data-ar="تواصل">Contact</a></li>
   </ul>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lang-btn" onclick="setLang('ar')" id="btn-ar">ع</button>
+  </div>
 </nav>
 
 <!-- HERO -->
