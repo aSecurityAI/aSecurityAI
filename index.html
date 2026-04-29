@@ -948,16 +948,155 @@ body.ar .lang-toggle { margin-left: 0; margin-right: 24px; }
       <a href="#projects" class="btn-secondary" id="cta2">VIEW PROJECTS</a>
     </div>
   </div>
-  <div class="hero-visual">
-    <div class="hex-ring"></div>
-    <div class="hex-ring"></div>
-    <div class="hex-ring"></div>
-    <div class="hex-center">
-      <div class="hex-icon">⬡</div>
-      <div class="hex-label">CYBER//AI</div>
+  <div class="hero-visual" style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+    <canvas id="logo-canvas" width="320" height="320" style="display:block;cursor:pointer;"></canvas>
+    <div id="logo-info-panel" style="width:300px;background:#060f17;border:1px solid #00ff88;padding:14px 18px;position:relative;opacity:0;transition:opacity 0.4s;overflow:visible;box-sizing:border-box;">
+      <div style="position:absolute;top:0;left:0;width:8px;height:8px;border-top:1px solid #00ff88;border-left:1px solid #00ff88;"></div>
+      <div style="position:absolute;bottom:0;right:0;width:8px;height:8px;border-bottom:1px solid #00ff88;border-right:1px solid #00ff88;"></div>
+      <div id="logo-info-title" style="font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:2px;margin-bottom:6px;"></div>
+      <div id="logo-info-body" style="font-family:var(--font-mono);font-size:10px;line-height:1.8;color:#7aaa90;white-space:normal;word-break:break-word;"></div>
     </div>
+    <div id="logo-hint" style="font-family:var(--font-mono);font-size:9px;color:#1a4a3a;letter-spacing:1px;">● click any node to pause</div>
   </div>
+
+<script>
+(function(){
+const canvas=document.getElementById('logo-canvas');
+if(!canvas)return;
+const ctx=canvas.getContext('2d');
+const W=320,H=320,CX=160,CY=160;
+const nodes=[
+  {label:'RED TEAM',  icon:'⚔', color:'#ff4444',
+   desc:'Offensive security · Penetration testing & exploitation · Find vulnerabilities before attackers do.',
+   descAr:'اختبار الاختراق الهجومي · استغلال الثغرات · اكتشاف نقاط الضعف قبل المهاجمين.',
+   angle:-90},
+  {label:'BLUE TEAM', icon:'🛡', color:'#00cfff',
+   desc:'Cyber defense & threat hunting · SOC operations & incident response · Monitor & neutralize threats.',
+   descAr:'الدفاع السيبراني وصيد التهديدات · عمليات SOC والاستجابة للحوادث · المراقبة وتحييد التهديدات.',
+   angle:-45},
+  {label:'AI / LLM',  icon:'◈', color:'#a855f7',
+   desc:'Local AI & LLM integration · RAG pipelines & offline automation · Intelligent decision support.',
+   descAr:'أنظمة ذكاء اصطناعي محلية · تقنيات RAG والأتمتة · دعم القرار الأمني الذكي.',
+   angle:0},
+  {label:'BLOCKCHAIN',icon:'⛓', color:'#00ff88',
+   desc:'Smart contract auditing · DeFi & Web3 vulnerability analysis · Crypto asset protection.',
+   descAr:'تدقيق العقود الذكية · تحليل ثغرات DeFi و Web3 · حماية الأصول الرقمية والعملات.',
+   angle:45},
+  {label:'CLOUD',     icon:'☁', color:'#00cfff',
+   desc:'Cloud infrastructure security · Hardening & compliance · Cloud-native threat detection.',
+   descAr:'أمن البنية التحتية السحابية · تصليب الأنظمة والامتثال · كشف التهديدات السحابية.',
+   angle:90},
+  {label:'NETWORKS',  icon:'⬡', color:'#00ff88',
+   desc:'Network design & traffic analysis · Cisco / BGP / OSPF / VPN / VLAN · Firewall & infrastructure.',
+   descAr:'تصميم الشبكات وتحليل حركة المرور · Cisco / BGP / OSPF / VPN / VLAN · إدارة الجدران النارية.',
+   angle:135},
+  {label:'WEB SEC',   icon:'◉', color:'#00ff88',
+   desc:'Web application security · OWASP top 10 & injection defense · API security & auth hardening.',
+   descAr:'أمن تطبيقات الويب · OWASP top 10 والحماية من الحقن · أمن API والمصادقة.',
+   angle:180},
+  {label:'HARDWARE',  icon:'◧', color:'#a855f7',
+   desc:'Computer & network maintenance · BIOS/UEFI & system recovery · Hardware diagnostics & repair.',
+   descAr:'صيانة الحاسوب والشبكات · استكشاف أخطاء BIOS/UEFI · تشخيص الأجهزة وإصلاحها.',
+   angle:225},
+];
+const OR=115,NR=20,DUR=100,HOLD=95;
+let frame=0,paused=false,phase='idle',pf=0,idx=0;
+function ease(t){return t<0.5?2*t*t:-1+(4-2*t)*t}
+function lerp(a,b,t){return a+(b-a)*t}
+function npos(n){const a=n.angle*Math.PI/180;return{x:CX+OR*Math.cos(a),y:CY+OR*Math.sin(a)}}
+function showInfo(n){
+  const isAr=document.body.classList.contains('ar');
+  document.getElementById('logo-info-title').style.color=n.color;
+  document.getElementById('logo-info-title').textContent='[ '+n.label+' ]';
+  document.getElementById('logo-info-body').textContent=isAr?(n.descAr||n.desc):n.desc;
+  document.getElementById('logo-info-panel').style.opacity='1';
+}
+function hideInfo(){document.getElementById('logo-info-panel').style.opacity='0';}
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#030a0f';ctx.fillRect(0,0,W,H);
+  [135,115,90,68].forEach((r,i)=>{
+    ctx.beginPath();ctx.arc(CX,CY,r,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,255,136,'+(0.06+i*0.04)+')';
+    ctx.lineWidth=0.6;ctx.setLineDash(i%2===0?[3,5]:[]);ctx.stroke();ctx.setLineDash([]);
+  });
+  ctx.strokeStyle='rgba(0,255,136,0.09)';ctx.lineWidth=0.5;
+  [0,45,90,135].forEach(a=>{
+    const r=135,rad=a*Math.PI/180;
+    ctx.beginPath();ctx.moveTo(CX+r*Math.cos(rad),CY+r*Math.sin(rad));
+    ctx.lineTo(CX-r*Math.cos(rad),CY-r*Math.sin(rad));ctx.stroke();
+  });
+  nodes.forEach((n,i)=>{
+    if(i===idx&&phase!=='idle')return;
+    const p=npos(n);
+    ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(CX,CY);
+    ctx.strokeStyle=n.color+'33';ctx.lineWidth=0.7;ctx.stroke();
+  });
+  let tx=null,ty=null;
+  if(phase==='travel-in'){const t=ease(Math.min(pf/DUR,1));const p=npos(nodes[idx]);tx=lerp(p.x,CX,t);ty=lerp(p.y,CY,t);}
+  else if(phase==='hold'){tx=CX;ty=CY;}
+  else if(phase==='travel-out'){const t=ease(Math.min(pf/DUR,1));const p=npos(nodes[idx]);tx=lerp(CX,p.x,t);ty=lerp(CY,p.y,t);}
+  nodes.forEach((n,i)=>{
+    const p=npos(n);const isA=i===idx&&phase!=='idle';
+    ctx.globalAlpha=isA?0.18:1;
+    ctx.beginPath();ctx.arc(p.x,p.y,NR,0,Math.PI*2);
+    ctx.fillStyle='#030a0f';ctx.fill();
+    ctx.strokeStyle=n.color;ctx.lineWidth=1.2;ctx.stroke();
+    ctx.font="13px \'Courier New\'";ctx.fillStyle=n.color;
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(n.icon,p.x,p.y);
+    ctx.font="6.5px \'Courier New\'";
+    const ly=p.y+(n.angle>=-45&&n.angle<=135?-NR-9:NR+9);
+    ctx.fillText(n.label,p.x,ly);ctx.globalAlpha=1;
+  });
+  if(tx!==null){
+    const n=nodes[idx];const sc=phase==='hold'?1.4:1;
+    ctx.save();ctx.translate(tx,ty);ctx.scale(sc,sc);
+    if(phase==='hold'){
+      ctx.beginPath();ctx.arc(0,0,NR+12,0,Math.PI*2);ctx.strokeStyle=n.color+'22';ctx.lineWidth=0.7;ctx.stroke();
+      ctx.beginPath();ctx.arc(0,0,NR+6,0,Math.PI*2);ctx.strokeStyle=n.color+'44';ctx.lineWidth=1;ctx.stroke();
+    }
+    ctx.beginPath();ctx.arc(0,0,NR,0,Math.PI*2);ctx.fillStyle='#030a0f';ctx.fill();
+    ctx.strokeStyle=n.color;ctx.lineWidth=2;ctx.stroke();
+    ctx.font="15px \'Courier New\'";ctx.fillStyle=n.color;
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(n.icon,0,0);
+    ctx.restore();
+  }
+  ctx.beginPath();ctx.arc(CX,CY,17,0,Math.PI*2);ctx.fillStyle='#030a0f';ctx.fill();
+  ctx.strokeStyle='#00ff88';ctx.lineWidth=1.4;ctx.stroke();
+  ctx.beginPath();ctx.arc(CX,CY,7,0,Math.PI*2);ctx.fillStyle='#00ff88cc';ctx.fill();
+  ctx.beginPath();ctx.arc(CX,CY,3,0,Math.PI*2);ctx.fillStyle='#030a0f';ctx.fill();
+  const sw=(frame*0.022)%(Math.PI*2);
+  ctx.beginPath();ctx.moveTo(CX,CY);ctx.arc(CX,CY,135,sw,sw+0.38);ctx.closePath();
+  ctx.fillStyle='rgba(0,255,136,0.04)';ctx.fill();
+}
+function tick(){
+  if(!paused){
+    frame++;pf++;
+    if(phase==='idle'){if(pf>50){phase='travel-in';pf=0;showInfo(nodes[idx]);}}
+    else if(phase==='travel-in'){if(pf>=DUR){phase='hold';pf=0;}}
+    else if(phase==='hold'){if(pf>=HOLD){phase='travel-out';pf=0;}}
+    else if(phase==='travel-out'){if(pf>=DUR){phase='idle';pf=0;idx=(idx+1)%nodes.length;hideInfo();}}
+  }
+  draw();requestAnimationFrame(tick);
+}
+canvas.addEventListener('click',e=>{
+  const r=canvas.getBoundingClientRect();
+  const mx=(e.clientX-r.left)*(W/r.width);
+  const my=(e.clientY-r.top)*(H/r.height);
+  nodes.forEach((n,i)=>{
+    const p=npos(n);
+    if(Math.hypot(mx-p.x,my-p.y)<NR+8){
+      if(paused&&idx===i){paused=false;document.getElementById('logo-hint').textContent='● click any node to pause';return;}
+      paused=true;idx=i;phase='hold';pf=0;showInfo(n);
+      document.getElementById('logo-hint').textContent='⏸ paused — click same node to resume';
+    }
+  });
+});
+tick();
+})();
+</script>
 </section>
+
 
 <!-- SERVICES -->
 <section id="services">
